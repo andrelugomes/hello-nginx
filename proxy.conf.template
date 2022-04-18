@@ -1,0 +1,35 @@
+server {
+    access_log /dev/stdout apm;
+    listen                  443 ssl;
+
+    ssl_certificate         /etc/ssl/server.crt;
+    ssl_certificate_key     /etc/ssl/server.key;
+    ssl_protocols           TLSv1.2 TLSv1.3;
+    ssl_ciphers             ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384;
+    ssl_client_certificate  /etc/nginx/client_certs/ca.crt;
+    ssl_verify_client       optional;
+    ssl_verify_depth        2;
+
+    # error_page 400 /error401.html;
+
+    location = /error401.html {
+       ssi on;
+       root /etc/nginx/html;
+       return 401;
+       add_header 'Content-Type' 'application/json charset=UTF-8' always;
+    }
+
+    location /public {
+        default_type application/json;
+        return 200 '{"code": "WELL_DONE", "title": "This is a public endpoint"}';
+    }
+
+    location /secure {
+        if ($ssl_client_verify != SUCCESS) {
+            return 403;
+        }
+
+        #return 200 '{"code": "WELL_DONE", "title": "This is a secure endpoint"}';
+        proxy_pass ${STYLES};
+    }
+}
