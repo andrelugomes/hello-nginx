@@ -78,3 +78,23 @@ curl --insecure https://localhost/secure --cert client2.crt --key client2.key
 ```shell
 cat MyCA.crt OtherCA.crt > merged.crt
 ```
+
+# OpenSSl
+
+```shell
+➜ openssl verify -verbose -CAfile MyCA.crt client.crt 
+client.crt: OK
+➜ openssl verify -verbose -CAfile MyCA.crt client2.crt
+C = BR, ST = SP, L = Ibate, O = Cliente 2, OU = eng, CN = Cliente 2 HTTP
+error 20 at 0 depth lookup: unable to get local issuer certificate
+error client2.crt: verification failed
+➜ openssl verify -verbose -CAfile OtherCA.crt client.crt 
+C = BR, ST = sao paulo, L = ibate, O = Andre client, OU = cleint, CN = Client HTTP
+error 20 at 0 depth lookup: unable to get local issuer certificate
+error client.crt: verification failed
+➜ openssl verify -verbose -CAfile OtherCA.crt client2.crt
+client2.crt: OK
+➜ openssl verify -verbose -CAfile merged.crt client2.crt client.crt 
+client2.crt: OK
+client.crt: OK
+```
