@@ -1,0 +1,29 @@
+[req]
+default_bits = 2048
+default_md = sha256
+encrypt_key = yes
+prompt = no
+string_mask = nombstr
+distinguished_name = client_distinguished_name
+req_extensions = req_cert_extensions
+
+[ client_distinguished_name ]
+businessCategory = Testes
+jurisdictionCountryName = BR
+serialNumber = 0000000191
+countryName = BR
+organizationName = Andre Luis Gomes
+stateOrProvinceName = Sao Paulo
+localityName = Ibate
+organizationalUnitName = 123
+UID = 123
+commonName = andrelugomes.com
+
+[ req_cert_extensions ] 
+basicConstraints = CA:FALSE
+subjectAltName = @alt_name
+keyUsage = critical,digitalSignature,keyEncipherment
+extendedKeyUsage = clientAuth
+
+[ alt_name ] 
+DNS = andrelugomes.com

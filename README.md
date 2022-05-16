@@ -53,6 +53,14 @@ openssl req -new -sha256 -key client2.key -out client2.csr
 openssl x509 -req -in client2.csr -CA OtherCA.crt -CAkey OtherCA.key -CAcreateserial -out client2.crt -days 1000 -sha256 
 ```
 
+### Client string_mask=nombstr
+
+```shell
+openssl req -new -utf8 -newkey rsa:2048 -nodes -out brcac.csr -keyout brcac.key -config ./brcac.cnf && cat brcac.csr
+
+openssl x509 -req -in brcac.csr -CA OtherCA.crt -CAkey OtherCA.key -CAcreateserial -out brcac.crt -days 1000 
+```
+
 ## Running
 ```shell
 docker build . -t my-nginx:proxy
@@ -72,6 +80,10 @@ curl --insecure https://localhost/secure --cert client.crt --key client.key
 
 ```shell
 curl --insecure https://localhost/secure --cert client2.crt --key client2.key 
+```
+
+```shell
+curl --insecure https://localhost/secure --cert brcac.crt --key brcac.key | jq .
 ```
 
 ## Merged CA
